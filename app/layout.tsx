@@ -20,8 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pretendard.className} min-h-[100dvh] h-full`}>
-        {children}
+      <body className={`${pretendard.className} min-h-[100dvh]`}>
+        <header className="fixed">fdfdfdf</header>
+        <div className="h-full">{children}</div>
       </body>
     </html>
   );
