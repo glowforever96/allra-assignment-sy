@@ -37,7 +37,7 @@ function usePolicyForm() {
 
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
   const [signupStep, setSignupStep] = useState(1);
-  const { increase } = useProgressStore();
+  const { updateStep } = useProgressStore();
 
   // 전체 동의 된 상태인지 여부 판별
   const isAllChecked = POLICY_DATA.every((item) => checkedItems[item.id]);
@@ -60,7 +60,7 @@ function usePolicyForm() {
   const handleClickNext = () => {
     if (isRequiredChecked) {
       setSignupStep(2);
-      increase(15);
+      updateStep("policy", true);
     }
   };
 
