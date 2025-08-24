@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import useSignupForm from "@/hooks/useSignupForm";
 import { Label } from "./ui/label";
 import { useProgressStore } from "@/store/useProgressStore";
+import { handleNumberOnlyInput } from "@/lib/input";
 
 export default function SignupForm() {
   const {
@@ -13,7 +14,6 @@ export default function SignupForm() {
     isBusinessNumVerified,
     handleBusinessNumVerify,
     handleBlur,
-    handleNumberOnlyInput,
     watch,
     onSubmitSignup,
   } = useSignupForm();
