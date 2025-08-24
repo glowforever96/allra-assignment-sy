@@ -11,6 +11,7 @@ export default function SignupForm() {
     register,
     handleSubmit,
     formState: { errors, isValid, touchedFields },
+    businessNumError,
     isBusinessNumVerified,
     handleBusinessNumVerify,
     handleBlur,
@@ -39,7 +40,7 @@ export default function SignupForm() {
                   : undefined
               }
               onBlur={(e) => handleBlur(e, "businessNumber")}
-              error={errors.businessNumber?.message}
+              error={businessNumError || errors.businessNumber?.message}
               disabled={isBusinessNumVerified}
               isVerified={isBusinessNumVerified}
               isBusinessNumInput
