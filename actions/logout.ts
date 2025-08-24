@@ -6,4 +6,5 @@ export async function logout() {
 
   (await cookieStore).delete("accessToken");
   (await cookieStore).delete("refreshToken");
+  (await cookieStore).delete("accessTokenExpiresIn");
 }
