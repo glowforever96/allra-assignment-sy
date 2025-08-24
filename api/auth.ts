@@ -1,11 +1,14 @@
 import axiosInstance from "./axios";
 
 export async function postBusinessNumVerify(body: { businessNumber: string }) {
-  const { data } = await axiosInstance.post(
+  const res = await axiosInstance.post(
     "/api/auth/verify-business-number",
     body
   );
-  return data;
+  if (res.status === 409) {
+    throw new Error("ALREADY_EXISTS");
+  }
+  return res.data;
 }
 
 type SignupFormData = {

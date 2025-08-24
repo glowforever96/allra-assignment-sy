@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import useBusinessNumVerify from "./queries/useBusinessNumVerify";
 import { useProgressStore } from "@/store/useProgressStore";
 import useSignup from "./queries/useSignup";
+import { useAlertStore } from "@/store/useAlert";
 
 function useSignupForm() {
   const {
@@ -22,9 +23,11 @@ function useSignupForm() {
   const { mutate: businessNumVerify } = useBusinessNumVerify();
   const { mutate: signup } = useSignup();
   const { updateStep } = useProgressStore();
+  const { setIsOpen } = useAlertStore();
 
   const [isBusinessNumVerified, setIsBusinessNumVerified] = useState(false);
   const [businessNumberVerifyToken, setBusinessNumbeVerifyToken] = useState("");
+  const [businessNumError, setBusinessNumError] = useState("");
 
   const handleBusinessNumVerify = async () => {
     const businessNumber = getValues("businessNumber");
@@ -32,22 +35,33 @@ function useSignupForm() {
       { businessNumber },
       {
         onSuccess: ({ company, owner, businessNumberVerifyToken }) => {
-          setValue("companyName", company);
-          setValue("userName", owner);
+          setValue("companyName", company ?? "");
+          setValue("userName", owner ?? "");
           setBusinessNumbeVerifyToken(businessNumberVerifyToken);
           setIsBusinessNumVerified(true);
+          setBusinessNumError("");
+        },
+        onError: () => {
+          setBusinessNumError("이미 등록된 사업자등록번호입니다.");
         },
       }
     );
   };
 
   const onSubmitSignup = (data: SignupFormData) => {
-    signup({
-      ...data,
-      businessNumberVerifyToken,
-      partnerId: Date.now().toString(),
-      isMarketingConsent: true,
-    });
+    signup(
+      {
+        ...data,
+        businessNumberVerifyToken,
+        partnerId: Date.now().toString(),
+        isMarketingConsent: true,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(true);
+        },
+      }
+    );
   };
 
   // 사업자 등록번호, 휴대폰 번호 입력 후 blur 시 자동 포맷팅 함수
@@ -116,11 +130,18 @@ function useSignupForm() {
     updateStep("email", isEmailValid);
   }, [watchedValues.email, errors.email, updateStep]);
 
+  useEffect(() => {
+    if (businessNumError) {
+      setBusinessNumError("");
+    }
+  }, [businessNumError, watchedValues.businessNumber]);
+
   return {
     register,
     handleSubmit,
     watch,
     formState: { errors, isValid, touchedFields },
+    businessNumError,
     isBusinessNumVerified,
     handleBusinessNumVerify,
     handleBlur,

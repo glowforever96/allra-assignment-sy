@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/header";
+import SignupSuccessDialog from "@/components/signup-sucess-dialog";
 
 const pretendard = localFont({
   src: "../fonts/PretendardVariable.woff2",
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={`${pretendard.className} min-h-[100dvh]`}>
         <Header />
         {children}
+        <SignupSuccessDialog />
       </body>
     </html>
   );
