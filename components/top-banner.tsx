@@ -14,6 +14,7 @@ export default function TopBanner({
           <figure className="relative aspect-[2/1] w-full overflow-hidden rounded-2xl border border-line-200">
             <Image
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               src={thumbnail}
               alt={`${title} | ${summary}`}
               priority
