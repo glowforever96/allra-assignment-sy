@@ -4,8 +4,9 @@ import ProgessBar from "@/components/progress-bar";
 import SignupForm from "@/components/signup-form";
 import { Button } from "@/components/ui/button";
 import usePolicyForm from "@/hooks/usePolicyForm";
+import { useProgressStore } from "@/store/useProgressStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignupPage() {
   const [queryClient] = useState(
@@ -23,6 +24,13 @@ export default function SignupPage() {
       })
   );
   const policyForm = usePolicyForm();
+  const { resetProgress } = useProgressStore();
+
+  useEffect(() => {
+    return () => {
+      resetProgress();
+    };
+  }, [resetProgress]);
 
   return (
     <QueryClientProvider client={queryClient}>

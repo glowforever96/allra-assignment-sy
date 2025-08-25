@@ -16,6 +16,7 @@ interface ProgressState {
   stepWeights: Record<ProgressStep, number>;
   updateStep: (step: ProgressStep, isValid: boolean) => void;
   calculateProgress: () => void;
+  resetProgress: () => void;
 }
 
 export const useProgressStore = create<ProgressState>((set, get) => ({
@@ -57,5 +58,21 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
       }
     });
     set({ value: Math.min(totalProgress, 100) });
+  },
+  resetProgress: () => {
+    set({
+      value: 0,
+      steps: {
+        policy: false,
+        businessNumber: false,
+        password: false,
+        confirmPassword: false,
+        companyName: false,
+        userName: false,
+        birthDate: false,
+        phone: false,
+        email: false,
+      },
+    });
   },
 }));
