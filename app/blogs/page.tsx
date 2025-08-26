@@ -3,6 +3,16 @@ import TopBanner from "@/components/top-banner";
 import BlogList from "@/components/blog-list";
 import SearchInput from "@/components/search-input";
 import CategoryTab from "@/components/category-tab";
+import { notFound } from "next/navigation";
+import { Category } from "@/types";
+
+const VALID_CATEGORIES: Category[] = [
+  "TREND",
+  "TIP",
+  "NEWS",
+  "GUIDE",
+  "EXPERIENCE",
+];
 
 type SearchParams = {
   page?: string;
@@ -16,13 +26,20 @@ export default async function BlogPage({
   searchParams: Promise<SearchParams>;
 }) {
   const { page, term, category } = await searchParams;
+  const pageNumber = Number(page);
+
+  if (page && (isNaN(pageNumber) || pageNumber < 1)) {
+    notFound();
+  }
+
+  if (category && !VALID_CATEGORIES.includes(category as Category)) {
+    notFound();
+  }
 
   const [bannerData, blogData] = await Promise.all([
     getBlogsBanner(),
-    getBlogs({ page: Number(page) ?? 1, term, category }),
+    getBlogs({ page: pageNumber || 1, term, category }),
   ]);
-
-  console.log("blogData:", blogData);
 
   return (
     <section className="flex flex-col pb-13">
@@ -30,7 +47,7 @@ export default async function BlogPage({
         <div className="flex flex-col gap-6 md:flex-row md:justify-between">
           <h2
             className="text-title-3 font-bold text-label-800 md:text-title-2 lg:text-title-1 tracking-title-3 leading-title-3
-          md:tracking-title-2 lg:tracking-title-1 md:leading-title-2 lg:leading-title-1"
+            md:tracking-title-2 lg:tracking-title-1 md:leading-title-2 lg:leading-title-1"
           >
             블로그
           </h2>
