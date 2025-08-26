@@ -5,6 +5,7 @@ import SearchInput from "@/components/search-input";
 import CategoryTab from "@/components/category-tab";
 import { notFound } from "next/navigation";
 import { Category } from "@/types";
+import MobileCarousel from "@/components/mobile-carousel";
 
 const VALID_CATEGORIES: Category[] = [
   "TREND",
@@ -53,6 +54,7 @@ export default async function BlogPage({
           </h2>
           <SearchInput />
         </div>
+        <MobileCarousel bannerData={bannerData} />
         {!term && <TopBanner bannerData={bannerData} />}
         <CategoryTab category={category} />
         <BlogList blogData={blogData} searchValue={term} />
