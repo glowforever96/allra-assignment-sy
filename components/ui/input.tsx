@@ -51,7 +51,7 @@ function Input({
           </div>
         )}
       </div>
-      {error && (
+      {error && !isPasswordInput && (
         <p className="text-caption-1 font-medium text-status-error">{error}</p>
       )}
       {success && !isPasswordInput && (
@@ -69,6 +69,7 @@ function Input({
       <div className="relative w-full">
         {inputElement}
         <button
+          tabIndex={-1}
           onClick={() => setShow(!show)}
           className="absolute right-3 top-1/2 -translate-y-1/2 z-1 text-line-400 cursor-pointer"
         >
@@ -79,6 +80,9 @@ function Input({
         <p className="text-caption-1 font-medium text-status-correct">
           {success}
         </p>
+      )}
+      {error && isPasswordInput && (
+        <p className="text-caption-1 font-medium text-status-error">{error}</p>
       )}
     </>
   );
