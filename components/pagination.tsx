@@ -15,29 +15,23 @@ interface PaginationProps {
 export default function Pagination({ totalItems }: PaginationProps) {
   const {
     currentPage,
-    term,
     pageNumbers,
     prevGroupFirstPage,
     nextGroupFirstPage,
     currentGroup,
     totalPages,
+    createPageUrl,
   } = usePagination(totalItems);
 
   const chevronIconClassName =
     "cursor-pointer disabled:cursor-not-allowed disabled:text-status-disable h-[40px] flex items-center justify-center";
 
-  if (totalPages <= 1) return null;
+  if (!totalPages) return null;
 
   return (
     <div className="flex items-center justify-center gap-2 mt-10">
       <div className="flex gap-2 items-center">
-        <Link
-          href={
-            prevGroupFirstPage === 1
-              ? `/blogs?${term ? `term=${term}` : ""}`
-              : `?page=${prevGroupFirstPage}&${term ? `term=${term}` : ""}`
-          }
-        >
+        <Link href={createPageUrl(prevGroupFirstPage)}>
           <button
             disabled={currentGroup === 1}
             className={chevronIconClassName}
@@ -46,13 +40,7 @@ export default function Pagination({ totalItems }: PaginationProps) {
           </button>
         </Link>
 
-        <Link
-          href={
-            currentPage > 1
-              ? `?page=${currentPage - 1}${term ? `&term=${term}` : ""}`
-              : `/blogs${term ? `?term=${term}` : ""}`
-          }
-        >
+        <Link href={createPageUrl(currentPage - 1)}>
           <button disabled={currentPage === 1} className={chevronIconClassName}>
             <ChevronLeftIcon />
           </button>
@@ -60,14 +48,7 @@ export default function Pagination({ totalItems }: PaginationProps) {
       </div>
       <div className="flex items-center">
         {pageNumbers.map((page) => (
-          <Link
-            href={
-              page === 1
-                ? `/blogs${term ? `?term=${term}` : ""}`
-                : `?page=${page}${term ? `&term=${term}` : ""}`
-            }
-            key={page}
-          >
+          <Link href={createPageUrl(page)} key={page}>
             <button
               className={`inline-flex items-center justify-center whitespace-nowrap cursor-pointer h-[40px] px-4 text-body-2
             rounded-full font-medium text-label-700 md:size-10 hover:bg-label-100 hover:text-label-700 ${
@@ -79,7 +60,7 @@ export default function Pagination({ totalItems }: PaginationProps) {
           </Link>
         ))}
       </div>
-      <Link href={`?page=${currentPage + 1}${term ? `&term=${term}` : ""}`}>
+      <Link href={createPageUrl(currentPage + 1)}>
         <button
           disabled={currentPage === totalPages}
           className={chevronIconClassName}
@@ -87,7 +68,7 @@ export default function Pagination({ totalItems }: PaginationProps) {
           <ChevronRightIcon />
         </button>
       </Link>
-      <Link href={`?page=${nextGroupFirstPage}${term ? `&term=${term}` : ""}`}>
+      <Link href={createPageUrl(nextGroupFirstPage)}>
         <button
           disabled={currentGroup >= Math.ceil(totalPages / MAX_VISIBLE_PAGES)}
           className={chevronIconClassName}
