@@ -45,7 +45,7 @@ export async function getBlogDetail({
   id,
 }: {
   id: string;
-}): Promise<BlogDetail> {
+}): Promise<BlogDetail | null> {
   const res = await fetch(
     `https://allra-front-assignment.vercel.app/api/blogs/${id}`,
     {
@@ -53,6 +53,10 @@ export async function getBlogDetail({
       next: { revalidate },
     }
   );
+
+  if (!res.ok && res.status === 404) {
+    return null;
+  }
   return res.json();
 }
 

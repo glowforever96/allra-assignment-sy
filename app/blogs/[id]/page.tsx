@@ -1,6 +1,7 @@
 import { getAllBlogs, getBlogDetail, getBlogs } from "@/api/blogs";
 import BlogDetailBreadcrumb from "@/components/blog-detail-breadcrumb";
 import { formatTime } from "@/lib/time";
+import { notFound } from "next/navigation";
 
 import DOMPurify from "isomorphic-dompurify";
 
@@ -21,6 +22,11 @@ export default async function BlogDetailPage({
 }) {
   const { id } = await params;
   const blogDetail = await getBlogDetail({ id });
+
+  if (!blogDetail) {
+    notFound();
+  }
+
   const cleanedContent = DOMPurify.sanitize(blogDetail.content);
 
   return (
