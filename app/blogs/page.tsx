@@ -2,17 +2,24 @@ import { getBlogs, getBlogsBanner } from "@/api/blogs";
 import TopBanner from "@/components/top-banner";
 import BlogList from "@/components/blog-list";
 import SearchInput from "@/components/search-input";
+import CategoryTab from "@/components/category-tab";
+
+type SearchParams = {
+  page?: string;
+  term?: string;
+  category?: string;
+};
 
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; term?: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
-  const { page, term } = await searchParams;
+  const { page, term, category } = await searchParams;
 
   const [bannerData, blogData] = await Promise.all([
     getBlogsBanner(),
-    getBlogs({ page: Number(page) ?? 1, term }),
+    getBlogs({ page: Number(page) ?? 1, term, category }),
   ]);
 
   console.log("blogData:", blogData);
@@ -30,6 +37,7 @@ export default async function BlogPage({
           <SearchInput />
         </div>
         {!term && <TopBanner bannerData={bannerData} />}
+        <CategoryTab category={category} />
         <BlogList blogData={blogData} searchValue={term} />
       </div>
     </section>
