@@ -55,3 +55,18 @@ export async function getBlogDetail({
   );
   return res.json();
 }
+
+export async function getAllBlogs({
+  pageSize,
+}: {
+  pageSize: number;
+}): Promise<BlogResponse> {
+  const res = await fetch(
+    `https://allra-front-assignment.vercel.app/api/blogs?pageSize=${pageSize}`,
+    {
+      cache: "force-cache",
+      next: { revalidate },
+    }
+  );
+  return res.json();
+}
