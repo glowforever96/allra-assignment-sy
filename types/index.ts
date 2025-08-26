@@ -15,6 +15,10 @@ interface Blog {
   createdAt: string;
   updatedAt: string;
 }
+interface BlogDetail extends Omit<Blog, "showCount"> {
+  content: string;
+  summary: string;
+}
 
 interface BlogResponse {
   list: Blog[];
@@ -24,4 +28,4 @@ interface BlogResponse {
   pageSize: number;
 }
 
-export type { BlogsBannerData, Blog, BlogResponse };
+export type { BlogsBannerData, Blog, BlogResponse, BlogDetail, Category };
