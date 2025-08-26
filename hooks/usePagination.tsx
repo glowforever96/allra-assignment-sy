@@ -6,7 +6,9 @@ export const MAX_VISIBLE_PAGES = 5;
 function usePagination(totalItems: number) {
   const searchParams = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1");
-  const term = searchParams.get("term");
+  const term = searchParams.get("term") || "";
+  const category = searchParams.get("category") || "";
+
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   // 현재 페이지 그룹 계산 (ex. 7page -> 2번째 그룹)
@@ -28,14 +30,27 @@ function usePagination(totalItems: number) {
   // 다음 페이지 묶음의 첫 페이지 (ex. 2번째 그룹 -> 11page)
   const nextGroupFirstPage = startPage + MAX_VISIBLE_PAGES;
 
+  const createPageUrl = (page: number) => {
+    const params = new URLSearchParams();
+
+    if (term) params.set("term", term);
+    if (category) params.set("category", category);
+    if (page > 1) params.set("page", page.toString());
+
+    const queryString = params.toString();
+    return queryString ? `/blogs?${queryString}` : "/blogs";
+  };
+
   return {
     currentPage,
     term,
+    category,
     pageNumbers,
     prevGroupFirstPage,
     nextGroupFirstPage,
     currentGroup,
     totalPages,
+    createPageUrl,
   };
 }
 

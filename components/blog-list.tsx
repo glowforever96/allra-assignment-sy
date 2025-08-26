@@ -5,6 +5,7 @@ import Pagination from "./pagination";
 import { formatTime } from "@/lib/time";
 import { BlogResponse } from "@/types";
 import NoSearchResult from "./no-search-result";
+import { CATEGORY_MAP } from "@/constants";
 
 interface BlogListProps {
   blogData: BlogResponse;
@@ -38,7 +39,7 @@ export default function BlogList({ blogData, searchValue }: BlogListProps) {
                 </figure>
                 <div className="flex flex-col gap-1">
                   <p className="text-body-3 font-medium text-secondary-400 tracking-body-3 leading-body-3">
-                    {blog.category}
+                    {CATEGORY_MAP[blog.category]}
                   </p>
                   <h3 className="line-clamp-2 text-title-4 font-medium tracking-title-4 leading-title-4">
                     {blog.title}
