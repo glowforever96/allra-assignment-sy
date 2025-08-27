@@ -49,6 +49,13 @@ export async function loginAction(_: any, formData: FormData) {
       maxAge: data.refreshTokenExpiresIn - now,
       path: "/",
     });
+    (await cookieStore).set(
+      "accessTokenExpiresIn",
+      String(data.accessTokenExpiresIn),
+      {
+        path: "/",
+      }
+    );
     redirect("/");
   }
 }

@@ -10,8 +10,10 @@ export async function middleware(request: NextRequest) {
   );
   const now = Math.floor(Date.now() / 1000);
 
+  // accessToken이 없거나 만료 시간이 10초 이내일 때
   if (refreshToken && (!accessToken || accessTokenExpiresIn - now < 10)) {
     try {
+      // 리프레시 토큰으로 토큰 갱신 요청
       const response = await fetch(
         "https://allra-front-assignment.vercel.app/api/auth/refresh-token",
         {
