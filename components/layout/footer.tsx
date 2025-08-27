@@ -46,13 +46,14 @@ export default function Footer() {
           </p>
           <div className="grid grid-cols-3 flex-wrap items-center md:grid-cols-4 lg:flex mt-3 md:mt-7">
             {LOGO_LIST.map((logo, idx) => (
-              <Image
-                key={idx}
-                src={logo}
-                alt="회사 로고"
-                width={100}
-                height={48}
-              />
+              <figure key={idx} className="relative w-24 h-12">
+                <Image
+                  src={logo}
+                  alt="회사 로고"
+                  fill
+                  className="object-contain"
+                />
+              </figure>
             ))}
           </div>
         </div>

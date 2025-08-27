@@ -4,9 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 function useSignup() {
   return useMutation({
     mutationFn: postSignup,
-    onSuccess: (data) => {
-      console.log(data);
-    },
   });
 }
 

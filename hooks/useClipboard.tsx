@@ -16,9 +16,10 @@ function useClipboard() {
       await navigator.clipboard.writeText(window.location.href);
       toast("링크가 복사되었어요.");
     } catch (error) {
-      console.error("URL 복사 실패:", error);
-      copoyWithExecCommand();
-      toast("링크가 복사되었어요.");
+      if (error instanceof Error) {
+        copoyWithExecCommand();
+        toast("링크가 복사되었어요.");
+      }
     }
   };
 
