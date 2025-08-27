@@ -5,6 +5,10 @@ import useSignupForm from "@/hooks/useSignupForm";
 import { Label } from "./ui/label";
 import { useProgressStore } from "@/store/useProgressStore";
 import { handleNumberOnlyInput } from "@/lib/input";
+import Link from "next/link";
+
+const BUSINESS_NUMBER_OUTLINK =
+  "https://www.ftc.go.kr/www/selectBizCommList.do?key=253&token=71FB05C5-4829-80F4-C230-B0FB890B3E892EB62DA22EDEFB1080D78429A22093C1";
 
 export default function SignupForm() {
   const {
@@ -27,7 +31,18 @@ export default function SignupForm() {
       className="flex flex-col w-full gap-5"
     >
       <div className="space-y-2 w-full flex flex-col">
-        <Label htmlFor="businessNumber">사업자등록번호 (ID)</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="businessNumber">사업자등록번호 (ID)</Label>
+          {!isBusinessNumVerified && (
+            <Link
+              href={BUSINESS_NUMBER_OUTLINK}
+              target="_blank"
+              className="text-body-3 font-medium text-label-700 underline"
+            >
+              사업자 번호가 기억나지 않아요
+            </Link>
+          )}
+        </div>
         <div className="flex gap-2">
           <div className="flex-1">
             <Input
