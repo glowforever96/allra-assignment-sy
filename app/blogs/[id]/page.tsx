@@ -6,6 +6,26 @@ import { notFound } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import BlogDetailButtons from "@/components/blog-detail-buttons";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const blogDetail = await getBlogDetail({ id });
+
+  if (!blogDetail) return null;
+  return {
+    title: blogDetail.title,
+    description: blogDetail.summary,
+    openGraph: {
+      title: blogDetail.title,
+      description: blogDetail.summary,
+      images: [blogDetail.thumbnail],
+    },
+  };
+}
+
 export const generateStaticParams = async () => {
   // 블로그 데이터가 많지 않아 전체 데이터를 가져와 빌드시 미리 SSG 생성해도 괜찮겠다고 판단
   const { totalCount } = await getBlogs({ page: 1 });

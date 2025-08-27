@@ -14,6 +14,12 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: "올라 핀테크 프론트 과제 | 권순용",
   description: "올라 핀테크 프론트 과제입니다.",
+  keywords: "Next.js, React, TypeScript, 블로그, 회원가입",
+  openGraph: {
+    title: "올라 핀테크 프론트 과제 | 권순용",
+    description: "올라 핀테크 프론트 과제입니다.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
