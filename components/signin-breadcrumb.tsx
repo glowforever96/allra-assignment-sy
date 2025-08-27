@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 
-export default function SignInBreadcrumb() {
+export default function SigninBreadcrumb() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
