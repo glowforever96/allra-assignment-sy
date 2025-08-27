@@ -1,8 +1,8 @@
 import Image from "next/image";
-import LoginSigninBtn from "./login-signin-btn";
 import Link from "next/link";
 import { getMe } from "@/actions/getMe";
 import LogoutBtn from "./logout-btn";
+import LoginSignupBtn from "./login-signup-btn";
 
 export default async function Header() {
   const user = await getMe();
@@ -26,7 +26,7 @@ export default async function Header() {
             <LogoutBtn />
           </div>
         ) : (
-          <LoginSigninBtn />
+          <LoginSignupBtn />
         )}
       </div>
     </header>

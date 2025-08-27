@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
 
-export default function LoginSigninBtn() {
+export default function LoginSignupBtn() {
   const pathname = usePathname();
 
   if (pathname === "/sign-in" || pathname === "/sign-up") {

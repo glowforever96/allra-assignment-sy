@@ -6,6 +6,7 @@ import useBusinessNumVerify from "./queries/useBusinessNumVerify";
 import { useProgressStore } from "@/store/useProgressStore";
 import useSignup from "./queries/useSignup";
 import { useAlertStore } from "@/store/useAlert";
+import { AxiosError } from "axios";
 
 function useSignupForm() {
   const {
@@ -41,8 +42,10 @@ function useSignupForm() {
           setIsBusinessNumVerified(true);
           setBusinessNumError("");
         },
-        onError: () => {
-          setBusinessNumError("이미 등록된 사업자등록번호입니다.");
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            setBusinessNumError(error.response?.data.errorMessage);
+          }
         },
       }
     );
@@ -129,12 +132,6 @@ function useSignupForm() {
     const isEmailValid = !!watchedValues.email && !errors.email;
     updateStep("email", isEmailValid);
   }, [watchedValues.email, errors.email, updateStep]);
-
-  useEffect(() => {
-    if (businessNumError) {
-      setBusinessNumError("");
-    }
-  }, [businessNumError, watchedValues.businessNumber]);
 
   return {
     register,

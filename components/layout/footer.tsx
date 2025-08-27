@@ -93,31 +93,31 @@ export default function Footer() {
 const TAIL_LINKS = [
   {
     title: "회사소개",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "서비스 이용약관",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "개인정보 처리방침",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "공지사항",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "FAQ",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "블로그",
-    href: "/terms",
+    href: "/",
   },
   {
     title: "채용정보",
-    href: "/terms",
+    href: "/",
   },
 ];
 
