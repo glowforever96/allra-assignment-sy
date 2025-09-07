@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Allra Frontend Assignment - PR 문서
 
-## Getting Started
+## 기술 스택
 
-First, run the development server:
+- **Next.js 15**: App Router 기반
+- **React 19**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **TypeScript**: 타입 안정성 확보
+- **Zod**: 런타임 스키마 검증
+
+- **tailwind CSS**
+- **shadcn/ui**
+
+- **Zustand**: 전역 상태 관리 (회원가입 진행률, 팝업 상태관리)
+- **React Query**: 서버 상태 관리
+- **React Hook Form**: 폼 상태 관리
+
+- **DOMPurify**: XSS 방지
+- **Axios**: HTTP 클라이언트
+
+## 파일 구조
+
+```
+allra-assignment-sy/
+├── app/
+│   ├── (auth)/            # 인증 라우트 (로그인/회원가입)
+│   ├── blogs/             # 블로그 라우트 (목록/상세)
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/               # 기본 UI 컴포넌트 (Button, Input 등)
+│   ├── layout/           # 레이아웃 컴포넌트 (Header, Footer)
+│   ├── blog-*.tsx        # 블로그 관련 컴포넌트
+│   ├── sign*.tsx         # 인증 관련 컴포넌트
+│   └── *.tsx             # 기타 컴포넌트
+├── api/                  # API 함수 (auth, blogs)
+├── actions/              # Server Actions 함수
+├── hooks/                # 커스텀 훅 (React Query, 폼 관리 등)
+├── store/                # Zustand 스토어
+├── lib/
+├── types/
+├── constants/
+├── public/
+└── middleware.ts         # 토큰 갱신 미들웨어
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 개발 과정에서 고민한 내용
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 과제에서 요구했던 프레임 워크가 Next.js였던만큼 Next.js가 제공하는 많은 기능들을 코드에 담기위해 노력했습니다.
 
-## Learn More
+- 과제의 데이터들이 다소 정적인 데이터가 많은만큼 CSR 방식보다는 SSR, ISR, SSG의 이점을 살려 모두 사용하도록 개발을 진행했습니다.
 
-To learn more about Next.js, take a look at the following resources:
+  **- SSR: blogs 페이지 검색 기능 진행시 캐시 사용 하지 않음 -> 요청시마다 최신 데이터 반영**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  **- ISR: 블로그 목록 페이지 -> 캐시를 사용하되 1시간마다 백그라운드에서 데이터 재검증**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  **- SSG: `generateStaticParams`를 사용해 빌드 시점에 모든 블로그 상세 페이지를 미리 생성**
+  (총 블로그 데이터가 많지 않아 괜찮다고 판단했으며 실제 빌드결과 222개의 페이지가 미리 생성되었습니다)
+  <img width="400" height="500" alt="스크린샷 2025-08-27 오후 9 59 10" src="https://github.com/user-attachments/assets/2d03529a-61fb-4e55-afa2-51612ebb370f"   />
 
-## Deploy on Vercel
+  **- CSR: 복잡한 폼처리와 유저 인터렉션이 많은 회원가입 페이지, 로그인 페이지에 적용**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- React Query도 데이터 캐싱, 동기화 등의 강력한 기능을 제공합니다. 하지만 Next.js 환경과 과제 구현 범위에서는 `fetch()`만으로 간편하게 구현이 가능하다고 판단했습니다. Auth 기능을 제외한 정적 데이터는 Next.js의 `fetch()`와 캐싱 전략으로 처리하고 동적 인증 로직에만 React Query를 사용하여 각 도구의 장점을 최대한 활용했습니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 서버 컴포넌트는 데이터 페칭과 최적화에 클라이언트 컴포넌트는 인터랙티브 기능에 집중하도록 설계했습니다.
+
+- 커스텀 hook을 통해 비즈니스 로직을 UI 컴포넌트에서 분리했습니다. `useSignupForm`, `useBusinessNumVerify` 등 도메인별 훅으로 관심사를 명확히 분리하여 재사용성을 높였습니다.
+
+- 회원가입 페이지에서는 `react-hook-form`과 `zod`를 조합하여 폼 상태 관리와 입력값 검증을 구현했습니다.
+  `react-hook-form`은 컨트롤러 기반 설계를 통해 불필요한 리렌더링을 최소화하여 성능을 개선하고 `zod`는 스키마 정의와 동시에 타입을 추론할 수 있어 런타임과 컴파일타임에서 모두 안정성을 확보할 수 있었습니다.
+
+- Next.js middleware 기능을 활용하여 모든 요청에서 access token의 만료 시간을 검사하고 만료 10초 전에 자동으로 refresh token을 사용해 새로운 토큰을 발급받도록 구현했습니다. 이를 통해 각 페이지나 API마다 토큰을 체크하는 코드를 줄일수 있었습니다.
+
+- 서버액션 기능을 활용해 로그인/로그아웃, 유저정보 조회 기능을 구현했습니다.
+
+  > **API 엔드포인트는 보안상 환경변수 처리를 해야하지만 `.env` 파일은 git에 올라가지 않으므로 하드코딩 처리했습니다.**
+
+  > **로그인 페이지에서는 `useActionState` hook을 활용해 클라이언트에서 서버액션 실행 결과를 간단하게 확인할수 있도록 설계했습니다.**
+
+  > **민감한 토큰/쿠키를 클라이언트로 노출하지 않고 서버에서 안전하게 처리 가능하게 설계했습니다.**
+
+- Next.js가 제공하는 `not-found` 페이지를 활용해 잘못된 URL 접근시 유저 친화적인 에러 페이지를 제공하도록 설계했습니다.
+
+- 빠르고 간편한 UI 컴포넌트 구축을 도와주는 `shadcn/ui`를 적극 활용했습니다. 복잡한 요구사항이 필요한 Input 관련 컴포넌트는 직접 커스텀해 제작했습니다.
+
+---
+
+## AI 활용 내역
+
+**Cursor AI**를 IDE로 활용했습니다.
+
+#### 프로젝트 설계 단계
+
+- Next.js App Router 기반 프로젝트 구조 설계
+- 서버 컴포넌트와 클라이언트 컴포넌트의 적절한 분리 방법 검토
+- 폴더 구조 수립
+- 디자인 토큰 정의
+
+#### 개발과정
+
+- Next.js 캐싱 전략과 렌더링 방식 선택
+- 폼 로직 개발에 필요한 라이브러리 학습 곡선 감소
+- 인증 시스템 Next.js middleware를 활용한 자동 토큰 갱신 로직 구현 방법 검토, server action 인증 방법 검토
+
+#### 문제 해결
+
+- 과제 수행 중 API 요청 오류나 컴포넌트 에러 문제 디버깅
+- 성능 최적화 포인트와 타입 안전성 개선
+
+> AI를 활용할 때는 단순히 "해줘"가 아닌 제가 원하는 설계 방향과 기술적 의도를 명확하게 전달해 저의 의도가 코드에 반영될 수 있도록 활용합니다. <br/> 이를 통해 AI의 제안을 검토하고 수정하는 과정에서 더 깊은 기술적 이해를 얻을 수 있다고 생각합니다.
